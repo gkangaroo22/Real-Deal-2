@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Key, Database, Bell, Download, Upload, Eye, EyeOff } from 'lucide-react';
 
+const isFirebaseConfigured = () =>
+  !!(import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_PROJECT_ID);
+
 export function Settings() {
   const [showGeminiKey, setShowGeminiKey] = useState(false);
   const [geminiKey, setGeminiKey] = useState('');
@@ -61,8 +64,17 @@ export function Settings() {
           <Database size={16} className="text-blue-400" /> Database Status
         </h3>
         <div className="flex items-center gap-3 mb-4">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-          <span className="text-amber-400 text-sm">Using local mock data — Firebase not configured</span>
+          {isFirebaseConfigured() ? (
+            <>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-emerald-400 text-sm">Connected to Firebase</span>
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-amber-400 text-sm">Using local mock data — Firebase not configured</span>
+            </>
+          )}
         </div>
         <p className="text-gray-500 text-xs">
           Configure Firebase credentials in your <code className="text-emerald-400 bg-gray-800 px-1 py-0.5 rounded">.env</code> file to enable persistent cloud storage. See <code className="text-emerald-400 bg-gray-800 px-1 py-0.5 rounded">.env.example</code> for required variables.
